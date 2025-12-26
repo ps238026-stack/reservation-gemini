@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve - Luxury Cafe</title>
+    <style>
+        /* 1. フォントと下地設定 */
+        :root {
+            --main-bg: #e2ddd4;
+            --form-bg: #fdfbf9;
+            --accent-gold: #b19d84;
+            --text-dark: #5d534a;
+            --text-light: #9e948a;
+            --border-color: #e8e1d9;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--main-bg);
+            /* 背景のひし形模様をより精細に再現 */
+            background-image: 
+                linear-gradient(135deg, #ede8df 25%, transparent 25%), 
+                linear-gradient(225deg, #ede8df 25%, transparent 25%), 
+                linear-gradient(45deg, #ede8df 25%, transparent 25%), 
+                linear-gradient(315deg, #ede8df 25%, transparent 25%);
+            background-position: 20px 0, 20px 0, 0 0, 0 0;
+            background-size: 40px 40px;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", serif;
+            color: var(--text-dark);
+        }
+
+        /* 2. レイアウト構造 */
+        .main-container {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            padding: 2% 5%;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 3. 左側：タイトルエリア */
+        .title-area {
+            flex: 1;
+            padding-bottom: 80px; /* 画像の重心に合わせる */
+        }
+
+        .title-area h1 {
+            font-size: 110px; /* 画像に近い特大サイズ */
+            font-weight: 300;
+            margin: 0;
+            letter-spacing: 0.12em;
+            line-height: 1;
+        }
+
+        .title-area .sub-title {
+            font-family: 'Helvetica', Arial, sans-serif;
+            font-size: 14px;
+            letter-spacing: 0.35em;
+            color: var(--text-light);
+            margin-top: 30px;
+            font-weight: 400;
+        }
+
+        .title-area .accent-line {
+            width: 160px;
+            height: 1px;
+            background-color: var(--accent-gold);
+            margin-top: 55px;
+            opacity: 0.7;
+        }
+
+        /* 4. 右側：ホワイトフォーム */
+        .reservation-card {
+            width: 460px;
+            background-color: var(--form-bg);
+            padding: 70px 55px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .input-group {
+            margin-bottom: 28px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 12px;
+            color: var(--text-light);
+            font-family: sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* 入力欄の微細な調整 */
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            background-color: #fff;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            border-radius: 0;
+            -webkit-appearance: none; /* デフォルトの矢印を消す */
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+        }
+
+        /* 日付とセレクトボックスのアイコン（画像に合わせて調整） */
+        input[type="date"] {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235d534a' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+        }
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235d534a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+        }
+
+        /* プレースホルダー */
+        ::placeholder { color: #d1cbc4; }
+
+        /* ボタン */
+        .submit-button {
+            width: 100%;
+            background-color: var(--accent-gold);
+            color: #fff;
+            border: none;
+            padding: 20px;
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.4s ease;
+        }
+
+        .submit-button:hover { background-color: #a3917a; }
+
+        /* 5. 完了画面のスタイル */
+        #done-ui {
+            display: none;
+            text-align: center;
+            padding: 40px 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+
+        /* スマホ対応 */
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; padding: 40px 20px; }
+            .title-area { padding: 0 0 60px 0; text-align: center; }
+            .title-area h1 { font-size: 70px; }
+            .title-area .accent-line { margin: 40px auto; }
+            .reservation-card { width: 100%; padding: 40px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="title-area">
+            <h1>Reserve</h1>
+            <div class="sub-title">MAKE A RESERVATION</div>
+            <div class="accent-line"></div>
+        </div>
+
+        <div class="reservation-card">
+            <form id="res-form">
+                <div class="input-group">
+                    <label>お名前</label>
+                    <input type="text" placeholder="山田 太郎" required>
+                </div>
+                <div class="input-group">
+                    <label>ご連絡先</label>
+                    <input type="text" placeholder="メールアドレスまたは電話番号" required>
+                </div>
+                <div class="input-group">
+                    <label>来店日</label>
+                    <input type="date" required>
+                </div>
+                <div class="input-group">
+                    <label>来店時間</label>
+                    <select required>
+                        <option value="" disabled selected>時間を選択してください</option>
+                        <option>11:00</option>
+                        <option>14:00</option>
+                        <option>18:00</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>人数</label>
+                    <select required>
+                        <option value="" disabled selected>人数を選択してください</option>
+                        <option>1名様</option>
+                        <option>2名様</option>
+                        <option>3名様以上</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-button">予約する</button>
+            </form>
+
+            <div id="done-ui">
+                <h2 style="font-weight: normal; letter-spacing: 0.1em; color: var(--accent-gold);">Reservation Completed</h2>
+                <p style="font-size: 14px; line-height: 2; margin-top: 30px;">
+                    ご予約ありがとうございました。<br>
+                    登録いただいた連絡先へ詳細をお送りしました。
+                </p>
+                <div style="width: 30px; height: 1px; background: var(--accent-gold); margin: 30px auto;"></div>
+                <button onclick="location.reload()" style="background: none; border: none; color: var(--text-light); cursor: pointer; text-decoration: underline; font-size: 12px;">戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('res-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.style.display = 'none'; // フォームを隠す
+            document.getElementById('done-ui').style.display = 'block'; // 完了画面を出す
+        });
+    </script>
+</body>
+</html>
